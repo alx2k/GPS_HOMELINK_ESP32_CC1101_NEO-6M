@@ -68,6 +68,14 @@ unsigned long opendelay; // variable to count time between signals
 int timebetweenresends = 60000; // wait time between sends in milliseconds.
 String logs = "";
 String state = "";
+bool trigger1 = false;
+bool trigger2 = false;
+bool trigger3 = false;
+bool trigger4 = false;
+bool trigger5 = false;
+bool trigger6 = false;
+bool trigger7 = false;
+bool trigger8 = false;
 
 ////////////////////////////////////////////////////////////////
 //////////////// ADDRESSES AND CODES ///////////////////////////
@@ -503,88 +511,139 @@ void loop() {
     summaryLog(String(distanceTo1), String(distanceTo2), String(distanceTo3), String(distanceTo4), String(distanceTo5), String(distanceTo6), String(distanceTo7), String(distanceTo8));
     
     // Check if the distance is less than or equal to the threshold and stop sending signal for a minute
-    if (distanceTo1 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo1 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger1 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 1: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 1, sending signal"; 
       sendSamples(samples_signal_1, LENGTH_SAMPLES_SIGNAL_1, FREQUENCY_SIGNAL_1);
       opendelay = millis();
+      trigger1 = true;
       delay(250);
     } 
 
-    if (distanceTo2 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo2 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger2 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 2: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 2, sending signal"; 
       sendSamples(samples_signal_2, LENGTH_SAMPLES_SIGNAL_2, FREQUENCY_SIGNAL_2);
+      trigger2 = true;
       opendelay = millis();
       delay(250);
     } 
 
 
-    if (distanceTo3 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo3 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger3 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 3: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 3, sending signal"; 
       sendSamples(samples_signal_3, LENGTH_SAMPLES_SIGNAL_3, FREQUENCY_SIGNAL_3);
+      trigger3 = true;
       opendelay = millis();
+      
       delay(250);
     } 
 
 
-    if (distanceTo4 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo4 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger4 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 4: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 4, sending signal"; 
       sendSamples(samples_signal_4, LENGTH_SAMPLES_SIGNAL_4, FREQUENCY_SIGNAL_4);
+      trigger4 = true;
       opendelay = millis();
       delay(250);
     } 
 
     // Check if the distance is less than or equal to the threshold
-    if (distanceTo5 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo5 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger5 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within to door 5: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 5, sending signal"; 
       sendSamples(samples_signal_5, LENGTH_SAMPLES_SIGNAL_5, FREQUENCY_SIGNAL_5);
+      trigger5 = true;
       opendelay = millis();
       delay(250);
     } 
 
-    if (distanceTo6 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo6 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger6 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 6: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 6, sending signal"; 
       sendSamples(samples_signal_6, LENGTH_SAMPLES_SIGNAL_6, FREQUENCY_SIGNAL_6);
+      trigger6 = true;
       opendelay = millis();
       delay(250);
     } 
 
 
-    if (distanceTo7 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo7 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger7 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 7: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 7, sending signal"; 
       sendSamples(samples_signal_7, LENGTH_SAMPLES_SIGNAL_7, FREQUENCY_SIGNAL_7);
+      trigger7 = true;
       opendelay = millis();
       delay(250);
     } 
 
 
-    if (distanceTo8 <= distanceThreshold && millis() - opendelay > timebetweenresends) {
+    if (distanceTo8 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger8 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 8: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 8, sending signal"; 
       sendSamples(samples_signal_8, LENGTH_SAMPLES_SIGNAL_8, FREQUENCY_SIGNAL_8);
+      trigger8 = true;
       opendelay = millis();
       delay(250);
     } 
       
     digitalWrite(ledPin, LOW);   // Turn off LED
     Serial.println("Not within range: LED OFF");
+
+    // reset triggers if distance is greater than threshold to avoid multiple remote sends
     
+    if (distanceTo1 > distanceThreshold) {
+      trigger1 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
+    if (distanceTo2 > distanceThreshold) {
+      trigger2 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
+    if (distanceTo3 > distanceThreshold) {
+      trigger3 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
+    if (distanceTo4 > distanceThreshold) {
+      trigger4 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
+    if (distanceTo5 > distanceThreshold) {
+      trigger5 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
+    if (distanceTo6 > distanceThreshold) {
+      trigger6 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
+    if (distanceTo7 > distanceThreshold) {
+      trigger7 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
+    if (distanceTo8 > distanceThreshold) {
+      trigger8 = false;
+      state = "Leaving area, reenabling device for sending signals"; 
+      
+    }
 
-
+    
   } else {
     appendLognonewline("X");
   }
