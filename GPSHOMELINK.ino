@@ -62,10 +62,14 @@ const int ledPin = 2; // Built-in LED on some ESP32 boards or external LED
 
 /////////////////////// VARIABLES ////////////////////////////////
 // Distance threshold in meters tweek at your best interest
-const double distanceThreshold = 25.0; // expressed in meters
+const double distanceThreshold = 25.0; // distance at which the signal will be sent expressed in meters
+const double resetdistanceThreshold = 100.0; // distance to reset the no resend trigger expressed in meters
+
 // Empty variable definition
 unsigned long opendelay; // variable to count time between signals
+unsigned long resetstatus; // variable to clear status line after 5 seconds
 int timebetweenresends = 60000; // wait time between sends in milliseconds.
+
 String logs = "";
 String state = "";
 bool trigger1 = false;
@@ -187,17 +191,15 @@ void appendLog(String message) {
 }
 
 void summaryLog(String distance1, String distance2, String distance3, String distance4, String distance5, String distance6, String distance7, String distance8) {
-    logs = String("<br><br><br><table border='1' style='border-collapse: collapse; text-align: center;'><tr><b><td>") + location1 + String("</td><td>") + location2 +String("</td><td>") + location3 + String("</td><td>") + location4 + String("</td><td>") + location5 + String("</td><td>") + location6 + String("</td><td>") + location7 + String("</td><td>") + location8 +String("</td></b></tr><tr><td>") +  distance1 + String("</td><td>") 
-    + distance2 + String("</td><td>") 
-    + distance3 + String("</td><td>") 
-    + distance4 + String("</td><td>") 
-    + distance5 + String("</td><td>") 
-    + distance6 + String("</td><td>") 
-    + distance7 + String("</td><td>")
-    + distance8 + String("</td></tr><tr><td colspan='5'>&nbsp;")
+    logs = String("<br><br><br><table border='1' style='border-collapse: collapse; text-align: center;'><tr><td><b>") + location1 + String("</b></td><td><b>") + location2 +String("</b></td><td><b>") + location3 + String("</b></td><td><b>") + location4 + String("</b></td></tr><tr><td>")
+    + distance1 + String("</td><td>") + distance2 + String("</td><td>") + distance3 + String("</td><td>") + distance4 + String("</td></tr><tr><td>")
+    + trigger1 + String("</td><td>") + trigger2 + String("</td><td>") + trigger3 + String("</td><td>") + trigger4 + String("</td></tr><tr><td><b>")
+    + location5 + String("</b></td><td><b>") + location6 + String("</b></td><td><b>") + location7 + String("</b></td><td><b>") + location8 + String("</b></td></tr><tr><td>")
+    + distance5 + String("</td><td>") + distance6 + String("</td><td>") + distance7 + String("</td><td>") + distance8 + String("</td></tr><tr><td>")
+    + trigger5 + String("</td><td>") + trigger6 + String("</td><td>") + trigger7 + String("</td><td>") + trigger8 + String("</td></tr><tr><td colspan='4'>&nbsp;")  
     + state + String("</td></tr></table>");
 }
-
+   
 
 void appendLognonewline(String message) {
     logs += message;
@@ -237,15 +239,20 @@ void handleRoot() {
                    "function door8() {"
                    "fetch('/door8').then(response => response.text()).then(data => console.log(data)).catch(err => console.error('Error:', err));"
                    "}"
+                   "function cleartrigger() {"
+                   "fetch('/cleartrigger').then(response => response.text()).then(data => console.log(data)).catch(err => console.error('Error:', err));"
+                   "}"
                    
                    "</script></head><body>"
                    "<h2>DIY GPS Homelink</h2>"
                    "<br>"
-                   "<h1><button onclick='door1()'>" + location1 + "</button>        <button onclick='door2()'>" + location2 + "</button>        <button onclick='door3()'>" + location3 + "</button>        <button onclick='door4()'>" + location4 + "</button>"
+                   "<h1><button onclick='door1()' style='width: 150px; height: 50px;'>" + location1 + "</button>        <button onclick='door2()' style='width: 150px; height: 50px;'>" + location2 + "</button>        <button onclick='door3()' style='width: 150px; height: 50px;'>" + location3 + "</button>        <button onclick='door4()' style='width: 150px; height: 50px;'>" + location4 + "</button>"
                    "<br><br>"
-                   "<button onclick='door5()'>" + location5 + "</button>        <button onclick='door6()'>" + location6 + "</button>        <button onclick='door7()'>" + location7 + "</button>        <button onclick='door8()'>" + location8 + "</button></h1>"
-                   "<br>"
+                   "<button onclick='door5()' style='width: 150px; height: 50px;'>" + location5 + "</button>        <button onclick='door6()' style='width: 150px; height: 50px;'>" + location6 + "</button>        <button onclick='door7()' style='width: 150px; height: 50px;'>" + location7 + "</button>        <button onclick='door8()' style='width: 150px; height: 50px;'>" + location8 + "</button></h1>"
+                   "<br><br>"
                    "<div id='logContainer'>" + logs + "</div>"
+                   "<br><br>"
+                   "<button onclick='cleartrigger()' style='width: 600px; height: 50px;'> Reset trigger limitation </button>"
                    "</body></html>";
     server.send(200, "text/html", html);
 }
@@ -259,6 +266,7 @@ void door1() {
       Serial.println("button pressed opening door 1: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 1"; 
       sendSamples(samples_signal_1, LENGTH_SAMPLES_SIGNAL_1, FREQUENCY_SIGNAL_1);
+      resetstatus = millis();
 }
 
 void door2() {
@@ -266,6 +274,7 @@ void door2() {
       Serial.println("button pressed opening door 2: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 2"; 
       sendSamples(samples_signal_2, LENGTH_SAMPLES_SIGNAL_2, FREQUENCY_SIGNAL_2);
+      resetstatus = millis();
 }
 
 void door3() {
@@ -273,6 +282,7 @@ void door3() {
       Serial.println("button pressed opening door 3: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 3"; 
       sendSamples(samples_signal_3, LENGTH_SAMPLES_SIGNAL_3, FREQUENCY_SIGNAL_3);
+      resetstatus = millis();
 }
 
 void door4() {
@@ -280,6 +290,7 @@ void door4() {
       Serial.println("button pressed opening door 4: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 4"; 
       sendSamples(samples_signal_4, LENGTH_SAMPLES_SIGNAL_4, FREQUENCY_SIGNAL_4);
+      resetstatus = millis();
 }
 
 void door5() {
@@ -287,6 +298,7 @@ void door5() {
       Serial.println("button pressed opening door 5: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 5"; 
       sendSamples(samples_signal_5, LENGTH_SAMPLES_SIGNAL_5, FREQUENCY_SIGNAL_5);
+      resetstatus = millis();
 }
 
 void door6() {
@@ -294,6 +306,7 @@ void door6() {
       Serial.println("button pressed opening door 6: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 6"; 
       sendSamples(samples_signal_6, LENGTH_SAMPLES_SIGNAL_6, FREQUENCY_SIGNAL_6);
+      resetstatus = millis();
 }
 
 void door7() {
@@ -301,6 +314,7 @@ void door7() {
       Serial.println("button pressed opening door 7: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 7"; 
       sendSamples(samples_signal_7, LENGTH_SAMPLES_SIGNAL_7, FREQUENCY_SIGNAL_7);
+      resetstatus = millis();
 }
 
 void door8() {
@@ -308,8 +322,22 @@ void door8() {
       Serial.println("button pressed opening door 8: LED ON");
       state = "GUI BUTTON PRESSED. OPENING DOOR 8"; 
       sendSamples(samples_signal_8, LENGTH_SAMPLES_SIGNAL_8, FREQUENCY_SIGNAL_8);
+      resetstatus = millis();
 }
 
+void cleartrigger() {
+      trigger1 = false;
+      trigger2 = false;
+      trigger3 = false;
+      trigger4 = false;
+      trigger5 = false;
+      trigger6 = false;
+      trigger7 = false;
+      trigger8 = false;
+      state = "triggers cleared"; 
+      resetstatus = millis();
+
+}
 
 void initCC1101(float mhz){
     ELECHOUSE_cc1101.Init();
@@ -385,6 +413,8 @@ void setup() {
   server.on("/door6", door6);
   server.on("/door7", door7);
   server.on("/door8", door8);
+  server.on("/cleartrigger", cleartrigger);
+  
   
   server.begin();
   appendLog("<br><br>HOMELINK log server enabled");
@@ -602,52 +632,55 @@ void loop() {
 
     // reset triggers if distance is greater than threshold to avoid multiple remote sends
     
-    if (distanceTo1 > distanceThreshold) {
+    if (distanceTo1 > resetdistanceThreshold && trigger1 == true) {
       trigger1 = false;
-      state = "Leaving area, reenabling device for sending signals"; 
+      state = "Leaving area, reenabling device for sending signals";
+      resetstatus = millis();
       
     }
-    if (distanceTo2 > distanceThreshold) {
+    if (distanceTo2 > resetdistanceThreshold && trigger2 == true) {
       trigger2 = false;
       state = "Leaving area, reenabling device for sending signals"; 
-      
+      resetstatus = millis();      
     }
-    if (distanceTo3 > distanceThreshold) {
+    if (distanceTo3 > resetdistanceThreshold && trigger3 == true) {
       trigger3 = false;
       state = "Leaving area, reenabling device for sending signals"; 
-      
+      resetstatus = millis();      
     }
-    if (distanceTo4 > distanceThreshold) {
+    if (distanceTo4 > resetdistanceThreshold && trigger4 == true) {
       trigger4 = false;
-      state = "Leaving area, reenabling device for sending signals"; 
-      
+      state = "Leaving area, reenabling device for sending signals";
+      resetstatus = millis();
     }
-    if (distanceTo5 > distanceThreshold) {
+    if (distanceTo5 > resetdistanceThreshold && trigger5 == true) {
       trigger5 = false;
       state = "Leaving area, reenabling device for sending signals"; 
-      
+      resetstatus = millis();
     }
-    if (distanceTo6 > distanceThreshold) {
+    if (distanceTo6 > resetdistanceThreshold && trigger6 == true) {
       trigger6 = false;
       state = "Leaving area, reenabling device for sending signals"; 
-      
+      resetstatus = millis();
     }
-    if (distanceTo7 > distanceThreshold) {
+    if (distanceTo7 > resetdistanceThreshold && trigger7 == true) {
       trigger7 = false;
       state = "Leaving area, reenabling device for sending signals"; 
-      
+      resetstatus = millis();
     }
-    if (distanceTo8 > distanceThreshold) {
+    if (distanceTo8 > resetdistanceThreshold && trigger8 == true) {
       trigger8 = false;
       state = "Leaving area, reenabling device for sending signals"; 
-      
+      resetstatus = millis();
     }
 
     
   } else {
     appendLognonewline("X");
   }
-
+  if (millis() - resetstatus > 10000) {
+    state = "";
+  }
   // Small delay to avoid overwhelming the serial port
   delay(500);
 }
