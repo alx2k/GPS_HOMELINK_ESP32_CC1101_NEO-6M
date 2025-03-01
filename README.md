@@ -14,7 +14,7 @@ Also, at this momment, it doesn't support rolling code. I tried to use the code 
 
 # Special thanks
 
-I would like to thank simondankelmann [https://github.com/simondankelmann/Esp32-SubGhz/tree/main/Esp32/Esp32-CC1101-Standalone] (https://github.com/simondankelmann/Esp32-SubGhz/tree/main/Esp32/Esp32-CC1101-Standalone).
+I would like to thank simondankelmann [https://github.com/simondankelmann/Esp32-SubGhz/tree/main/Esp32/Esp32-CC1101-Standalone](https://github.com/simondankelmann/Esp32-SubGhz/tree/main/Esp32/Esp32-CC1101-Standalone).
 
 His project helped me develop mine. Also, I will send you back to some of his projects later in the text.
 
