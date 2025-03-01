@@ -57,14 +57,23 @@ I don't want to hear that someone got robbed because a thief connected to this p
 After that, you will need to change the remote control information:
 
 Example:
+
 ////////////////////////////////////////////////////////////////
+
 // ADDRESS 6: 
+
 // DESCRIPTION: 
+
 String location6 = "Buckingham Palace";
+
 const double targetLat6 = 51.50142064413959;
+
 const double targetLon6 = -0.14164269166884363;
+
 #define LENGTH_SAMPLES_SIGNAL_6 3576
+
 #define FREQUENCY_SIGNAL_6 433.92
+
 int samples_signal_6[LENGTH_SAMPLES_SIGNAL_6] = {};
 
 In this part of the code, you will need to change the location name. This name will be used for Log output and also for the name that appears in each of the 8 push buttons in the web portal.
