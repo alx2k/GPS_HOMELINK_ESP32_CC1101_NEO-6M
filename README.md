@@ -46,7 +46,7 @@ For this project I am using an 8 pin CC1101, so the connections below refers to 
 | 17 | | RXD |
 
 
-# WHAT PARTS OF THE CODE DO YOU HAVE TO CHANGE
+# What parts of the code do you have to change
 
 You will need to change the Wifi SSID and Password. Please, use a strong password.
 
@@ -83,7 +83,7 @@ TargetLat and TargetLon are the GPS latitude and longitude of each of the garage
 
 LENGTH_SAMPLES_SIGNAL, FREQUENCY_SIGNAL AND samples_signal are the three values needed to send the correct remote signal. You will need to obtain that from the original remote.
 
-# OBTAINING THE ORIGINAL REMOTE'S DATA
+# Obtaining the original remote's data
 
 For that, I recommend three options, a flipper zero, an M5STICKC PLUS or lilygo T-embed CC1101 with bruce firmware [https://github.com/pr3y/Bruce](https://github.com/pr3y/Bruce) or, the cheapest in this case, because you already have the hardware, you can flash the device with SIMONDANKELMANN's SUBMARINE code [https://github.com/simondankelmann/SubMarine](https://github.com/simondankelmann/SubMarine). With no change in the connections, nor in his submarine code, using an Android device you can obtain the remote's RAW signal and save it into the phone.
 
@@ -91,7 +91,7 @@ If you have a flipper zero or a Lilygo T-embed CC1101, go that route. It will be
 
 If not, then use Simon's code. It won't cost you a penny in hardware.
 
-# CLEANING AND OBTAINING THE DATA THAT YOU NEED FOR THE CODE.
+# Cleaning and obtaining the remote's data that you need for the code.
 
 Now that you have the raw code, you will need to write it in a way that the code works.
 
