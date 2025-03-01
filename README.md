@@ -10,6 +10,8 @@ This project is in an early stage. Code might be buggy. I could send unwanted si
 
 Please, for safety, plug it to a switching power source. That way, when you turn off the car, the device will also poweroff to avoid phantom garage door openings.
 
+Also, at this momment, it doesn't support rolling code. I tried to use the code for 7 different doors, and only one had rolling code. I could try to dig into that, but I not super eager to do so ATM. 
+
 # Special thanks
 
 I would like to thank simondankelmann [https://github.com/simondankelmann/Esp32-SubGhz/tree/main/Esp32/Esp32-CC1101-Standalone] (https://github.com/simondankelmann/Esp32-SubGhz/tree/main/Esp32/Esp32-CC1101-Standalone).
@@ -70,3 +72,23 @@ In this part of the code, you will need to change the location name. This name w
 TargetLat and TargetLon are the GPS latitude and longitude of each of the garage doors. The simplest way to obtain this is Google Maps. Go to the location, right click and you will see the latitude and longitude in the first way of the popup menu. If you click on it, the location is copied and you can paste it into the code.
 
 LENGTH_SAMPLES_SIGNAL, FREQUENCY_SIGNAL AND samples_signal are the three values needed to send the correct remote signal. You will need to obtain that from the original remote.
+
+# OBTAINING THE ORIGINAL REMOTE'S DATA
+
+For that, I recommend three options, a flipper zero, an M5STICKC PLUS or lilygo T-embed CC1101 with bruce firmware [https://github.com/pr3y/Bruce](https://github.com/pr3y/Bruce) or, the cheapest in this case, because you already have the hardware, you can flash the device with SIMONDANKELMANN's SUBMARINE code [https://github.com/simondankelmann/SubMarine](https://github.com/simondankelmann/SubMarine). With no change in the connections, nor in his submarine code, using an Android device you can obtain the remote's RAW signal and save it into the phone.
+
+If you have a flipper zero or a Lilygo T-embed CC1101, go that route. It will be easier to save the code for the remote. But this project is about cost. If you have to buy a flipper zero (200€), then buy the original Tesla Homelink, for 155 € more you get it installed at your door by a professional.
+
+If not, then use Simon's code. It won't cost you a penny in hardware.
+
+# CLEANING AND OBTAINING THE DATA THAT YOU NEED FOR THE CODE.
+
+Now that you have the raw code, you will need to write it in a way that the code works.
+
+SIMMONDANKELMANN comes to the rescue once again, as he made this simple yet great webpage [https://simondankelmann.github.io/Esp32-SubGhz/](https://simondankelmann.github.io/Esp32-SubGhz/) in which you enter the RAW code you obtained in flipper, Bruce firmware or Submarine, and it tells you the values you need to enter in LENGTH_SAMPLES_SIGNAL and samples_signal.
+
+You will have to know the frequency of the signal, in order to introduce it in FREQUENCY_SIGNAL (format is XXX.XX, so it would be 868.35 or 433.92 for example). But if you have obtained the RAW code for the remote, you already know the frequency.
+
+# SMALLER THE BETTER
+
+Please, don't try to save huge RAW signals, the ESP32 is a super capable device, but if the signal is too long you might end up with a compile error. Use a signal long enough for the door to open, but small enough to fit in the memory. Don't ask me how I know...
