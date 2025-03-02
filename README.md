@@ -6,7 +6,7 @@ When you get close to the Garage door, it will automatically open. Also, there i
 
 # DISCLAIMER
 
-This project is in an early stage. Code might be buggy. I could send unwanted signals that trigger the door. If so, please tell me, including how it happended, so I can improve the code.
+This project is in an early stage. Code might be buggy. It could send unwanted signals that trigger the door. If so, please tell me, including how it happended, so I can improve the code.
 
 Please, for safety, plug it to a switching power source. That way, when you turn off the car, the device will also poweroff to avoid phantom garage door openings.
 
@@ -85,7 +85,7 @@ LENGTH_SAMPLES_SIGNAL, FREQUENCY_SIGNAL AND samples_signal are the three values 
 
 # Obtaining the original remote's data
 
-For that, I recommend three options, a flipper zero, an M5STICKC PLUS or lilygo T-embed CC1101 with bruce firmware [https://github.com/pr3y/Bruce](https://github.com/pr3y/Bruce) or, the cheapest in this case, because you already have the hardware, you can flash the device with SIMONDANKELMANN's SUBMARINE code [https://github.com/simondankelmann/SubMarine](https://github.com/simondankelmann/SubMarine). With no change in the connections, nor in his submarine code, using an Android device you can obtain the remote's RAW signal and save it into the phone.
+For that, I recommend three options, a flipper zero, either an M5STICKC PLUS or lilygo T-embed CC1101 with bruce firmware [https://github.com/pr3y/Bruce](https://github.com/pr3y/Bruce) or, the cheapest in this case, because you already have the hardware, you can flash the device with SIMONDANKELMANN's SUBMARINE code [https://github.com/simondankelmann/SubMarine](https://github.com/simondankelmann/SubMarine). With no change in the connections, nor in his submarine code, using an Android device you can obtain the remote's RAW signal and save it into the phone.
 
 If you have a flipper zero or a Lilygo T-embed CC1101, go that route. It will be easier to save the code for the remote. But this project is about cost. If you have to buy a flipper zero (200€), then buy the original Tesla Homelink, for 155 € more you get it installed at your door by a professional.
 
