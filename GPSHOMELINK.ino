@@ -68,7 +68,11 @@ const double resetdistanceThreshold = 100.0; // distance to reset the no resend 
 // Empty variable definition
 unsigned long opendelay; // variable to count time between signals
 unsigned long resetstatus; // variable to clear status line after 5 seconds
+unsigned long sendRFwithoutGPS; // 
+unsigned long currenttime; // 
+int timetosendRFwithoutGPS = 60000;
 int timebetweenresends = 60000; // wait time between sends in milliseconds.
+
 
 String logs = "";
 String state = "";
@@ -80,6 +84,7 @@ bool trigger5 = false;
 bool trigger6 = false;
 bool trigger7 = false;
 bool trigger8 = false;
+bool ingarageandnotyetgps = true;
 
 ////////////////////////////////////////////////////////////////
 //////////////// ADDRESSES AND CODES ///////////////////////////
@@ -438,6 +443,7 @@ void setup() {
   appendLog("Starting GPS Connection");
   appendLog("According to current configuration, doors will open when closer than " + String(distanceThreshold) + " meters.");
   opendelay = millis();
+  sendRFwithoutGPS = millis();
 }
 
 /////////////////////////////////////////////////////////////////
@@ -454,12 +460,12 @@ void loop() {
     gps.encode(c);
   }
   delay(500);
-  Serial.println();
+//  Serial.println();
   
   
   // Check if a new GPS location is available and is updated
   if (gps.location.isValid() && gps.location.isUpdated()) { 
-
+    ingarageandnotyetgps = false;
     double currentLat = gps.location.lat();
     double currentLon = gps.location.lng();
 
@@ -541,7 +547,7 @@ void loop() {
     summaryLog(String(distanceTo1), String(distanceTo2), String(distanceTo3), String(distanceTo4), String(distanceTo5), String(distanceTo6), String(distanceTo7), String(distanceTo8));
     
     // Check if the distance is less than or equal to the threshold and stop sending signal for a minute
-    if (distanceTo1 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger1 == false ) {
+    if (distanceTo1 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger1 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 1: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 1, sending signal"; 
@@ -551,7 +557,7 @@ void loop() {
       delay(250);
     } 
 
-    if (distanceTo2 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger2 == false ) {
+    if (distanceTo2 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger2 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 2: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 2, sending signal"; 
@@ -562,7 +568,7 @@ void loop() {
     } 
 
 
-    if (distanceTo3 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger3 == false ) {
+    if (distanceTo3 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger3 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 3: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 3, sending signal"; 
@@ -574,7 +580,7 @@ void loop() {
     } 
 
 
-    if (distanceTo4 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger4 == false ) {
+    if (distanceTo4 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger4 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 4: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 4, sending signal"; 
@@ -585,7 +591,7 @@ void loop() {
     } 
 
     // Check if the distance is less than or equal to the threshold
-    if (distanceTo5 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger5 == false ) {
+    if (distanceTo5 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger5 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within to door 5: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 5, sending signal"; 
@@ -595,7 +601,7 @@ void loop() {
       delay(250);
     } 
 
-    if (distanceTo6 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger6 == false ) {
+    if (distanceTo6 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger6 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 6: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 6, sending signal"; 
@@ -606,7 +612,7 @@ void loop() {
     } 
 
 
-    if (distanceTo7 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger7 == false ) {
+    if (distanceTo7 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger7 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 7: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 7, sending signal"; 
@@ -617,7 +623,7 @@ void loop() {
     } 
 
 
-    if (distanceTo8 <= distanceThreshold && millis() - opendelay > timebetweenresends && trigger8 == false ) {
+    if (distanceTo8 <= distanceThreshold && (millis() - opendelay) > timebetweenresends && trigger8 == false ) {
       digitalWrite(ledPin, HIGH);  // Turn on LED
       Serial.println("Within range to door 8: LED ON");
       state = "Closer than " + String(distanceThreshold) + " meters from location 8, sending signal"; 
@@ -677,6 +683,45 @@ void loop() {
     
   } else {
     appendLognonewline("X");
+    if (ingarageandnotyetgps == true) {
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_1, LENGTH_SAMPLES_SIGNAL_1, FREQUENCY_SIGNAL_1);
+        delay(1500);
+      }
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_2, LENGTH_SAMPLES_SIGNAL_2, FREQUENCY_SIGNAL_2);
+        delay(1500);
+      }
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_3, LENGTH_SAMPLES_SIGNAL_3, FREQUENCY_SIGNAL_3);
+        delay(1500);
+      }
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_4, LENGTH_SAMPLES_SIGNAL_4, FREQUENCY_SIGNAL_4);
+        delay(1500);
+      }
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_5, LENGTH_SAMPLES_SIGNAL_5, FREQUENCY_SIGNAL_5);
+        delay(1500);
+      }
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_6, LENGTH_SAMPLES_SIGNAL_6, FREQUENCY_SIGNAL_6);
+        delay(1500);
+      }
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_7, LENGTH_SAMPLES_SIGNAL_7, FREQUENCY_SIGNAL_7);
+        delay(1500);
+      }
+      if (WiFi.softAPgetStationNum() == 0) {
+        sendSamples(samples_signal_8, LENGTH_SAMPLES_SIGNAL_8, FREQUENCY_SIGNAL_8);
+        delay(1500);
+      }
+
+      currenttime = millis() - sendRFwithoutGPS;
+      if (currenttime > timetosendRFwithoutGPS) {
+        ingarageandnotyetgps = false;
+      }
+    }
   }
   if (millis() - resetstatus > 10000) {
     state = "";
