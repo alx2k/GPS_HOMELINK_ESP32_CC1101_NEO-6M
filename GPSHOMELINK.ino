@@ -686,35 +686,35 @@ void loop() {
     if (ingarageandnotyetgps == true) {
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_1, LENGTH_SAMPLES_SIGNAL_1, FREQUENCY_SIGNAL_1);
-        delay(1500);
+        delay(150);
       }
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_2, LENGTH_SAMPLES_SIGNAL_2, FREQUENCY_SIGNAL_2);
-        delay(1500);
+        delay(150);
       }
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_3, LENGTH_SAMPLES_SIGNAL_3, FREQUENCY_SIGNAL_3);
-        delay(1500);
+        delay(150);
       }
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_4, LENGTH_SAMPLES_SIGNAL_4, FREQUENCY_SIGNAL_4);
-        delay(1500);
+        delay(150);
       }
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_5, LENGTH_SAMPLES_SIGNAL_5, FREQUENCY_SIGNAL_5);
-        delay(1500);
+        delay(150);
       }
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_6, LENGTH_SAMPLES_SIGNAL_6, FREQUENCY_SIGNAL_6);
-        delay(1500);
+        delay(150);
       }
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_7, LENGTH_SAMPLES_SIGNAL_7, FREQUENCY_SIGNAL_7);
-        delay(1500);
+        delay(150);
       }
       if (WiFi.softAPgetStationNum() == 0) {
         sendSamples(samples_signal_8, LENGTH_SAMPLES_SIGNAL_8, FREQUENCY_SIGNAL_8);
-        delay(1500);
+        delay(150);
       }
 
       currenttime = millis() - sendRFwithoutGPS;
